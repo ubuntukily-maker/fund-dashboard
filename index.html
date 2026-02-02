@@ -2,40 +2,80 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>基金实时估值</title>
+  <title>我的基金实时估值</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    table { border-collapse: collapse; width: 60%; margin-top: 20px;}
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background-color: #f0f0f0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .fund-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .fund-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px 20px;
+      width: 220px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .fund-card:hover {
+      transform: translateY(-3px);
+    }
+    .fund-name {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .fund-code {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .fund-info {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .up { color: #e53935; }    /* 涨红色 */
+    .down { color: #43a047; }  /* 跌绿色 */
   </style>
 </head>
 <body>
   <h1>我的基金实时估值</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>基金名称</th>
-        <th>基金代码</th>
-        <th>单位净值</th>
-        <th>估算涨跌幅(%)</th>
-        <th>更新时间</th>
-      </tr>
-    </thead>
-    <tbody id="fund-table"></tbody>
-  </table>
+  <div class="fund-container" id="fund-container"></div>
 
   <script>
     fetch("./fund_data.json")
       .then(res => res.json())
       .then(data => {
-        const tbody = document.getElementById("fund-table");
+        const container = document.getElementById("fund-container");
         data.forEach(f => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${f.name}</td><td>${f.code}</td><td>${f.jz}</td><td>${f.gszzl}</td><td>${f.gztime}</td>`;
-          tbody.appendChild(tr);
+          const card = document.createElement("div");
+          card.className = "fund-card";
+
+          // 涨跌颜色
+          const gszzlClass = parseFloat(f.gszzl) >= 0 ? "up" : "down";
+
+          card.innerHTML = `
+            <div class="fund-name">${f.name}</div>
+            <div class="fund-code">${f.code}</div>
+            <div class="fund-info">单位净值: ${f.jz}</div>
+            <div class="fund-info">估算涨跌: <span class="${gszzlClass}">${f.gszzl}%</span></div>
+            <div class="fund-info">更新时间: ${f.gztime}</div>
+          `;
+          container.appendChild(card);
         });
-      });
+      })
+      .catch(err => console.error("加载基金数据失败", err));
   </script>
 </body>
 </html>
