@@ -2,7 +2,7 @@ const fs = require("fs");
 const axios = require("axios");
 
 // 修改为你关注的基金代码
-const fundCodes = ["161039", "001469", "519732"];
+const fundCodes = ["161039", "001469", "519732", "020412","018123", "013346", "015790"];
 
 async function fetchFund(code) {
   try {
@@ -35,3 +35,4 @@ async function main() {
 }
 
 main();
+
