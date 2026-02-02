@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>基金实时估值</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    table { border-collapse: collapse; width: 60%; margin-top: 20px;}
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>我的基金实时估值</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>基金名称</th>
+        <th>基金代码</th>
+        <th>单位净值</th>
+        <th>估算涨跌幅(%)</th>
+        <th>更新时间</th>
+      </tr>
+    </thead>
+    <tbody id="fund-table"></tbody>
+  </table>
+
+  <script>
+    fetch("./fund_data.json")
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("fund-table");
+        data.forEach(f => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${f.name}</td><td>${f.code}</td><td>${f.jz}</td><td>${f.gszzl}</td><td>${f.gztime}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
+</body>
+</html>
